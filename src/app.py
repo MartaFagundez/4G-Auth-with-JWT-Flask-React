@@ -83,13 +83,15 @@ def serve_any_other_file(path):
 # ================ ENDPOINTS ================ #
 # =========================================== #
 
-# ================= Register ================ #
-@app.route("/register", methods=["POST"])
-def register():
+# ================== Signup ================= #
+@app.route("/signup", methods=["POST"])
+def signup():
     body = request.get_json(silent=True)
 
     if body is None:
         return jsonify({"msg": "Debes enviar las credenciales en el body"}), 400
+    if 'username' not in body:
+        return jsonify({"msg": "El campo username es obligatorio"}), 400
     if 'email' not in body:
         return jsonify({"msg": "El campo email es obligatorio"}), 400
     if 'password' not in body:
@@ -98,6 +100,7 @@ def register():
     pw_hash = bcrypt.generate_password_hash(body['password']).decode('utf-8')
 
     new_user = User()
+    new_user.username = body["username"]
     new_user.email = body["email"]
     new_user.password = pw_hash
     new_user.is_active = True
@@ -127,13 +130,15 @@ def login():
     return jsonify({"msg": "Ok", "token": acces_token})
 
 
-@app.route("/prueba", methods=["GET"])
-def test_msg():
-    response_body = {
-         "msg": "get prueba OK"
-     }
-    
-    return jsonify(response_body), 200
+# ================= Route Protected ================= #
+@app.route("/protected", methods=["GET"])
+@jwt_required()
+def protected():
+    # Access the identity of the current user with get_jwt_identity
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+
+    return jsonify({"id": user.id, "username": user.username}), 200
 
 
 # this only runs if `$ python src/main.py` is executed
