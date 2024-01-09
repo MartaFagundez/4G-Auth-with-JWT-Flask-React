@@ -23,7 +23,13 @@ static_file_dir = os.path.join(os.path.dirname(
     os.path.realpath(__file__)), '../public/')
 app = Flask(__name__)
 app.url_map.strict_slashes = False
+
+# Create a Bcrypt object and pass our Flask app as an argument
 bcrypt = Bcrypt(app)
+
+# Setup the Flask-JWT-Extended extension
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
+jwt = JWTManager(app)
 
 # database condiguration
 db_url = os.getenv("DATABASE_URL")
@@ -74,6 +80,34 @@ def serve_any_other_file(path):
     return response
 
 
+# ================ ENDPOINTS ================ #
+# =========================================== #
+
+# ================= Register ================ #
+@app.route("/register", methods=["POST"])
+def register():
+    body = request.get_json(silent=True)
+
+    if body is None:
+        return jsonify({"msg": "Debes enviar las credenciales en el body"}), 400
+    if 'email' not in body:
+        return jsonify({"msg": "El campo email es obligatorio"}), 400
+    if 'password' not in body:
+        return jsonify({"msg": "El campo password es obligatorio"}), 400
+
+    pw_hash = bcrypt.generate_password_hash(body['password']).decode('utf-8')
+
+    new_user = User()
+    new_user.email = body["email"]
+    new_user.password = pw_hash
+    new_user.is_active = True
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({'msg':'Usuario registrado correctamente'}), 200
+
+
+# ================= Login ================= #
 @app.route('/login', methods=['POST'])
 def login():
     body = request.get_json(silent=True)
@@ -85,15 +119,21 @@ def login():
     if 'password' not in body:
         return jsonify({"msg": "El campo password es obligatorio"}), 400
     
-    user = user.query.filter_by(email = body['email']).first()
-    if user is None:
-        return jsonify({"msg": "Usuario o contraseña incorrecto"}), 400
-    check_password = bcrypt.check_password_hash(user.password, body['password'])
-    if check_password:
+    user = User.query.filter_by(email = body['email']).first()
+    if user is None or not bcrypt.check_password_hash(user.password, body['password']):
         return jsonify({"msg": "Usuario o contraseña incorrecto"}), 400
     
     acces_token = create_access_token(identity = user.id)
     return jsonify({"msg": "Ok", "token": acces_token})
+
+
+@app.route("/prueba", methods=["GET"])
+def test_msg():
+    response_body = {
+         "msg": "get prueba OK"
+     }
+    
+    return jsonify(response_body), 200
 
 
 # this only runs if `$ python src/main.py` is executed
