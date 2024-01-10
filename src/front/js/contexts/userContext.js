@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
-import { fetchUser, getToken} from "../../client-API/backendAPI";
+import { login, fetchUser} from "../../client-API/backendAPI";
 
 // Crear el contexto para el store
-export const CharactersContext = createContext(null);
+export const UserContext = createContext(null);
 
 // Estado inicial del store
 const storeInitialState = {
@@ -18,7 +18,7 @@ const storeInitialState = {
 };
 
 // =============== PROVEEDOR DEL CONTEXTO ================ //
-export function CharactersContextProvider({ children }) {
+export function UserContextProvider({ children }) {
     // ================== STORE ================== //
     // Contiene los datos del Contexto.
     const [store, setStore] = useState(storeInitialState);
@@ -28,7 +28,7 @@ export function CharactersContextProvider({ children }) {
     // Contiene las funciones que modifican el store.
     const actions = {
         setToken: () => {
-            getToken(email, password)
+            login(email, password)
             .then(data => {
                 setStore({...store, token: data})
             });
@@ -38,30 +38,35 @@ export function CharactersContextProvider({ children }) {
             .then(data => {
                 setStore({...store, user: data});
             });
+        },
+        synkWithLocalStorage: () => {
+          setStore({...store, user: localStorage.getItem("user")});
+          setStore({...store, token: localStorage.getItem("token")})
         }
     }
   
   
-     // Sincronizar el estado global con los contactos de la API al montar el contexto
-     useEffect(() => {
-      actions.syncCharacterstList();
-  
+    // Sincronizar el estado global con los datos del localstorage si este tiene datos
+    useEffect(() => {
+      if (localStorage.getItem("user") && localStorage.getItem("token")) {
+        actions.synkWithLocalStorage();
+      }
     }, []); 
     
   
     return (
-      <CharactersContext.Provider value={{ store, actions }}>
+      <UserContext.Provider value={{ store, actions }}>
         {children}
-      </CharactersContext.Provider>
+      </UserContext.Provider>
     );
   };
   
   
   // Hook personalizado para acceder al contexto
-  export function useCharactersContext() {
-    const context = useContext(CharactersContext);
+  export function useUserContext() {
+    const context = useContext(UserContext);
     if (!context) {
-      throw new Error('useCharactersContext debe ser usado dentro de un CharactersContextProvider');
+      throw new Error('useUserContext debe ser usado dentro de un UserContextProvider');
     }
     return context;
   };

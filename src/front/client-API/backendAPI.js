@@ -23,7 +23,7 @@ export const signup = async (newUser) => {
 }
 
 // Obtener el token de autenticación
-export const getToken = async (email, password) => {
+export const login = async (email, password) => {
     try {
         const response = await fetch(`${apiUrlBase}/login`, {
             method: "POST",
