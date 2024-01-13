@@ -24,7 +24,6 @@ export const signup = async (newUser) => {
 
 // Obtener el token de autenticación
 export const login = async (email, password) => {
-    console.log("Antes del fetch");
     try {
         const response = await fetch(`${apiUrlBase}/login`, {
             method: "POST",
@@ -35,14 +34,16 @@ export const login = async (email, password) => {
         });
 
         if (!response.ok) {
-            throw new Error('Error al intentar logearse');
+            const errorData = await response.json();
+            throw new Error(errorData.msg);
         }
 
         const data = await response.json();
         return data.token;
 
     } catch (error) {
-        console.error('Error on login:', error);
+        console.error('Error fetching token:', error);
+        throw error; // Lanzar la excepción para que se propague hacia arriba
     }
 }
 
@@ -58,7 +59,8 @@ export const fetchUser = async token => {
       });
   
       if (!response.ok) {
-        throw new Error('Error al obtener los datos del usuario');
+        const errorData = await response.json();
+        throw new Error(errorData.msg);
       }
   
       const data = await response.json();
@@ -66,5 +68,6 @@ export const fetchUser = async token => {
   
     } catch (error) {
       console.error('Error fetching user:', error);
+      throw error; // Lanzar la excepción para que se propague hacia arriba
     }
   };
