@@ -12,13 +12,15 @@ export const signup = async (newUser) => {
         });
 
         if (!response.ok) {
-            throw new Error('Error al intentar registrar el usuario');
+            const errorData = await response.json();
+            throw new Error(errorData.msg);
         }
 
         return 1;
 
     } catch (error) {
-        console.error('Error on signup:', error);
+        console.error('Error trying to register user', error);
+        throw error; // Lanzar la excepción para que se propague hacia arriba
     }
 }
 
