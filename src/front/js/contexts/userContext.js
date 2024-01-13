@@ -27,21 +27,14 @@ export function UserContextProvider({ children }) {
     // =============== ACTIONS ================= //
     // Contiene las funciones que modifican el store.
     const actions = {
-        setToken: () => {
-            login(email, password)
-            .then(data => {
-                setStore({...store, token: data})
-            });
-        },
-        setUser: (token) => { // No requiere id porque se extrae del JWT token
-            fetchUser(token)
-            .then(data => {
-                setStore({...store, user: data});
-            });
-        },
+        setToken: (token) => setStore({...store, token: token}),
+        setUser: (user) => setStore({...store, user: user}),
         synkWithLocalStorage: () => {
-          setStore({...store, user: localStorage.getItem("user")});
-          setStore({...store, token: localStorage.getItem("token")})
+          setStore({
+            ...store, 
+            user: localStorage.getItem("user"), 
+            token: localStorage.getItem("token")
+          });
         }
     }
   

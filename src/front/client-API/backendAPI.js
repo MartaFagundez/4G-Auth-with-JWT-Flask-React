@@ -24,6 +24,7 @@ export const signup = async (newUser) => {
 
 // Obtener el token de autenticación
 export const login = async (email, password) => {
+    console.log("Antes del fetch");
     try {
         const response = await fetch(`${apiUrlBase}/login`, {
             method: "POST",

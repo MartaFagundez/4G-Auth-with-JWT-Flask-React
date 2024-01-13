@@ -15,6 +15,7 @@ from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
+from flask_cors import CORS
 
 # from models import Person
 
@@ -22,6 +23,10 @@ ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
 static_file_dir = os.path.join(os.path.dirname(
     os.path.realpath(__file__)), '../public/')
 app = Flask(__name__)
+
+# Configuración de CORS básica (permite CORS para todos los dominios en todas las rutas), se puede hacer más específica
+CORS(app)
+
 app.url_map.strict_slashes = False
 
 # Create a Bcrypt object and pass our Flask app as an argument
