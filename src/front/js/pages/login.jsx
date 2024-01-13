@@ -26,7 +26,7 @@ export default function Login() {
     return (
         <div className="container">
             <div className="d-flex flex-column align-items-center">
-                <h1 className="text-center mt-5 mb-3">Login</h1>
+                <h1 className="text-center my-5">Login</h1>
                 <form className="w-100" style={{maxWidth: "500px"}} onSubmit={(e) => handleSubmit(e)}>
                     <div className="mb-3">
                         <label htmlFor="email" className="form-label">Email address</label>

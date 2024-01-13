@@ -9,9 +9,14 @@ export const Home = () => {
 	const isLogged = Object.keys(store.user).length > 0;
 
 	return (
-		<div className="text-center mt-5">
-			<h1>Home</h1>
-			<h2>Welcome {isLogged ? store.user.username : "Guest"}!</h2>
+		<div className="d-flex flex-column align-items-center">
+			<h1 className="text-center my-5">Home</h1>
+			<h2 className="text-center display-1">Welcome
+				<br/>
+				<span className={isLogged ? "fw-bold" : ""}>
+					{isLogged ? store.user.username : "Guest"}
+				</span>!
+			</h2>
 		</div>
 	);
 };
