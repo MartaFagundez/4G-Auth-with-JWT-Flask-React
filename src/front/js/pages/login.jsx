@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useUserContext } from "../contexts/userContext";
-import { login} from "../../client-API/backendAPI";
+import { login, fetchUser} from "../../client-API/backendAPI";
 
 export default function Login() {
     const {actions} = useUserContext();
@@ -13,11 +13,14 @@ export default function Login() {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        await login(email, password)
-            .then(data => {
-                actions.setToken(data);
-                navigate("/");
-        });
+        const token = await login(email, password);
+        actions.setToken(token);
+        localStorage.setItem('token', token);
+
+        const user = await fetchUser(token);
+		actions.setUser(user);
+        localStorage.setItem('user', JSON.stringify(user));
+        navigate("/");
     }
 
     return (

@@ -27,14 +27,15 @@ export function UserContextProvider({ children }) {
     // =============== ACTIONS ================= //
     // Contiene las funciones que modifican el store.
     const actions = {
-        setToken: (token) => setStore({...store, token: token}),
-        setUser: (user) => setStore({...store, user: user}),
+        setToken: (token) => setStore(prevState => ({ ...prevState, token: token })),
+        setUser: (user) => setStore(prevState => ({ ...prevState, user: user })),
         synkWithLocalStorage: () => {
-          setStore({
-            ...store, 
-            user: localStorage.getItem("user"), 
-            token: localStorage.getItem("token")
-          });
+          const storedUser = localStorage.getItem("user");
+          const storedToken = localStorage.getItem("token");
+
+          if (storedUser && storedToken) {
+            setStore(prevState => ({ ...prevState, user: JSON.parse(storedUser), token: storedToken }));
+          }
         }
     }
   
