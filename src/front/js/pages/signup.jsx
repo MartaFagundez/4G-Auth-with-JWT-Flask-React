@@ -8,6 +8,7 @@ import { signup } from '../../client-API/backendAPI';
 export default function Signup() {
   const [loading, setLoading] = useState(false);
   const [signupError, setSignupError] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   const navigate = useNavigate();
 
@@ -18,7 +19,7 @@ export default function Signup() {
       password: "",
     },
   });
-  const { register, control, handleSubmit, formState } = form;
+  const { register, control, handleSubmit, formState, reset } = form;
   const { errors } = formState;
 
   // Referencia para sólo invocar una actualización de estado si el componente aún está montado
@@ -38,7 +39,8 @@ export default function Signup() {
     try {
       const isRegistered = await signup(data);
       if (isRegistered) {
-        navigate("/login");
+        reset();
+        setShowModal(true);
       }
     } catch (error) {
       console.error("Error en registro de usuario: ", error);
@@ -117,7 +119,7 @@ export default function Signup() {
                 message: "Maximum length is 30 characters"
               }
             })} />
-            <p className='fs-6 text-danger'>{errors.pass?.message}</p>
+            <p className='fs-6 text-danger'>{errors.password?.message}</p>
           </div>
           
           {/* Submit Button and Errors alerts */}
@@ -149,6 +151,24 @@ export default function Signup() {
             )}
           </div>
         </form>
+      </div>
+
+      {/* Modal */}
+      <div className="modal" tabIndex="-1" role="dialog" style={{ display: showModal ? 'block' : 'none' }}>
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Successful registration</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowModal(false)}></button>
+            </div>
+            <div className="modal-body">
+              <p>Your registration has been successful! Now you can log in.</p>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={() => navigate("/login")}>Go to Login</button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <DevTool control={control} /> {/* set up the dev tool */}
