@@ -15,6 +15,10 @@ export default function Signup() {
 
   const { errors } = formState;
 
+  function onSubmit(data) {
+    console.log("Form submited: ", data);
+  }
+
 
   return (
     <div className='container'>
@@ -22,7 +26,7 @@ export default function Signup() {
         <h1 className="text-center my-5">Signup</h1>
         
         {/* FORM */}
-        <form className="w-100" style={{maxWidth: "500px"}}>
+        <form className="w-100" style={{maxWidth: "500px"}} onSubmit={handleSubmit(onSubmit)} noValidate>
 
           {/* Username */}
           <div className="mb-3">
@@ -60,7 +64,7 @@ export default function Signup() {
             })} />
           </div>
 
-          <button type="submit" className="btn btn-primary">Signup</button>
+          <button className="btn btn-primary">Signup</button>
         </form>
       </div>
 
