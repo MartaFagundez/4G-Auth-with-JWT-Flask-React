@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 
+import { signup } from '../../client-API/backendAPI';
+
 export default function Signup() {
+  const [loading, setLoading] = useState(false);
+  const [signupError, setSignupError] = useState("");
+
+  const navigate = useNavigate();
+
   const form = useForm({
     defaultValues: {
       username: "",
@@ -10,13 +18,37 @@ export default function Signup() {
       password: "",
     },
   });
-
   const { register, control, handleSubmit, formState } = form;
-
   const { errors } = formState;
 
-  function onSubmit(data) {
+  // Referencia para sólo invocar una actualización de estado si el componente aún está montado
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    }
+  }, []);
+
+  async function onSubmit(data) {
     console.log("Form submited: ", data);
+    setLoading(true);// Activar el spinner
+    setSignupError("");
+
+    try {
+      const isRegistered = await signup(data);
+      if (isRegistered) {
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("Error en registro de usuario: ", error);
+      setSignupError(error.message);
+    }
+    finally {
+      if (isMounted.current) {
+        setLoading(false); // Desactivar el spinner
+      }
+    }
   }
 
 
@@ -88,13 +120,34 @@ export default function Signup() {
             <p className='fs-6 text-danger'>{errors.pass?.message}</p>
           </div>
           
-          {/* Submit Button and Errors alert */}
-          {Object.keys(errors).length > 0 && (
-            <div className="alert alert-danger mt-3" role="alert">
-                There is invalid data. Please correct the errors and try again.
-            </div>
-          )}
-          <button className="btn btn-primary">Signup</button>
+          {/* Submit Button and Errors alerts */}
+          { // Errores generados por validaciones del frontend
+            Object.keys(errors).length > 0 && 
+            (
+              <div className="alert alert-danger mt-3" role="alert">
+                  There is invalid data. Please correct the errors and try again.
+              </div>
+            )
+          }
+
+          { // Errores generados por validaciones del backend
+            signupError !== "" && 
+            (
+              <div className="alert alert-danger mt-3" role="alert">
+                  {signupError}
+              </div>
+            )
+          }
+
+          {/* Submit Button */}
+          <div className="d-flex align-items-center">
+            <button className="btn btn-primary me-3" disabled={loading} >Signup</button>
+            {loading && (
+                          <div className="spinner-border text-primary" role="status">
+                              <span className="visually-hidden">Loading...</span>
+                          </div>
+            )}
+          </div>
         </form>
       </div>
 
