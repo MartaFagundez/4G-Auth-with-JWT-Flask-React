@@ -40,6 +40,7 @@ export default function Signup() {
                 message: "Username is required"
               }
             })} />
+            <p className='fs-6 text-danger'>{errors.username?.message}</p>
           </div>
 
           {/* Email */}
@@ -51,6 +52,7 @@ export default function Signup() {
                 message: "Email is required"
               }
             })} />
+            <p className='fs-6 text-danger'>{errors.email?.message}</p>
           </div>
 
           {/* Password */}
@@ -62,6 +64,7 @@ export default function Signup() {
                 message: "Password is required"
               }
             })} />
+            <p className='fs-6 text-danger'>{errors.pass?.message}</p>
           </div>
 
           <button className="btn btn-primary">Signup</button>
