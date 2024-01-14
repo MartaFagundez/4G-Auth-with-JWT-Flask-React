@@ -28,19 +28,36 @@ export default function Signup() {
           <div className="mb-3">
             <label htmlFor="username" className="form-label">Username</label>
              {/* Registrar el input en useForm mediante la función "register" */}
-            <input type="text" className="form-control" id="username" {...register("username")} />
+             {/* Incluir validaciones mediante el options object */}
+            <input type="text" className="form-control" id="username" {...register("username", {
+              // Options object
+              required: {
+                value: true,
+                message: "Username is required"
+              }
+            })} />
           </div>
 
           {/* Email */}
           <div className="mb-3">
             <label htmlFor="email" className="form-label">Email address</label>
-            <input type="email" className="form-control" id="email" {...register("email")} />
+            <input type="email" className="form-control" id="email" {...register("email", {
+              required: {
+                value: true,
+                message: "Email is required"
+              }
+            })} />
           </div>
 
           {/* Password */}
           <div className="mb-3">
             <label htmlFor="pass" className="form-label">Password</label>
-            <input type="password" className="form-control" id="pass" {...register("pass")} />
+            <input type="password" className="form-control" id="pass" {...register("pass", {
+              required: {
+                value: true,
+                message: "Password is required"
+              }
+            })} />
           </div>
 
           <button type="submit" className="btn btn-primary">Signup</button>
