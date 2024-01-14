@@ -101,6 +101,13 @@ def signup():
         return jsonify({"msg": "El campo email es obligatorio"}), 400
     if 'password' not in body:
         return jsonify({"msg": "El campo password es obligatorio"}), 400
+    
+    user_with_username = User.query.filter_by(username = body['username']).first()
+    if user_with_username is not None:
+        return jsonify({"msg": "This username is not available"}), 400
+    user_with_email = User.query.filter_by(email = body["email"]).first()
+    if user_with_email is not None:
+        return jsonify({"msg": "A user with this email already exists"}), 400
 
     pw_hash = bcrypt.generate_password_hash(body['password']).decode('utf-8')
 
