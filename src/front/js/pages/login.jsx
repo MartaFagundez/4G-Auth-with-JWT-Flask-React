@@ -76,7 +76,7 @@ export default function Login() {
     return (
         <div className="container">
             <div className="d-flex flex-column align-items-center">
-                <h1 className="text-center my-5">Login</h1>
+                <h1 className="text-center my-5">Log In</h1>
                 {
                     !loading &&
                     <form className="w-100" style={{maxWidth: "500px"}} onSubmit={(e) => handleSubmit(e)}>
@@ -97,7 +97,7 @@ export default function Login() {
                                 {loginError}
                             </div>
                         )}
-                        <button type="submit" className="btn btn-primary" disabled={!isFormValid}>Login</button>
+                        <button type="submit" className="btn btn-primary" disabled={!isFormValid}>Log in</button>
                     </form>
                 }
 

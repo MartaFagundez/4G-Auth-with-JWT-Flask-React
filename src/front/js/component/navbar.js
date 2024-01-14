@@ -27,9 +27,9 @@ export const Navbar = () => {
 				<div className="ml-auto">
 					<NavButton 
 						route={isLogged ? "/profile" : "/signup"} 
-						text={isLogged ? "Profile" : "Signup"}
+						text={isLogged ? "Profile" : "Sign up"}
 					/>
-					{ !isLogged && <NavButton route="/login" text="Login"/> }
+					{ !isLogged && <NavButton route="/login" text="Log in"/> }
 					{ isLogged && <button className="btn btn-danger" onClick={handleLogout}>Logout</button> }
 				</div>
 			</div>

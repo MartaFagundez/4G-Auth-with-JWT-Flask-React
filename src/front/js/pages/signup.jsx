@@ -57,7 +57,7 @@ export default function Signup() {
   return (
     <div className='container'>
       <div className="d-flex flex-column align-items-center">
-        <h1 className="text-center my-5">Signup</h1>
+        <h1 className="text-center my-5">Sign Up</h1>
         
         {/* FORM */}
         <form className="w-100" style={{maxWidth: "500px"}} onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -143,7 +143,7 @@ export default function Signup() {
 
           {/* Submit Button */}
           <div className="d-flex align-items-center">
-            <button className="btn btn-primary me-3" disabled={loading} >Signup</button>
+            <button className="btn btn-primary me-3" disabled={loading} >Sign up</button>
             {loading && (
                           <div className="spinner-border text-primary" role="status">
                               <span className="visually-hidden">Loading...</span>
