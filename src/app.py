@@ -112,7 +112,7 @@ def signup():
     db.session.add(new_user)
     db.session.commit()
 
-    return jsonify({'msg':'Usuario registrado correctamente'}), 200
+    return jsonify({'msg':'Usuario registrado correctamente'}), 201
 
 
 # ================= Login ================= #
