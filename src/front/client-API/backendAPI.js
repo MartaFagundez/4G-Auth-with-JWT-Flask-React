@@ -16,7 +16,7 @@ export const signup = async (newUser) => {
             throw new Error(errorData.msg);
         }
 
-        return 1;
+        return true;
 
     } catch (error) {
         console.error('Error trying to register user', error);
