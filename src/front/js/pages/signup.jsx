@@ -38,6 +38,14 @@ export default function Signup() {
               required: {
                 value: true,
                 message: "Username is required"
+              },
+              minLength: {
+                value: 3,
+                message: "Minimum length is 3 characters"
+              },
+              maxLength: {
+                value: 20,
+                message: "Maximum length is 20 characters"
               }
             })} />
             <p className='fs-6 text-danger'>{errors.username?.message}</p>
@@ -50,23 +58,42 @@ export default function Signup() {
               required: {
                 value: true,
                 message: "Email is required"
-              }
+              },
+              pattern: {
+                value:
+                  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                message: "Invalid email format"
+              },
             })} />
             <p className='fs-6 text-danger'>{errors.email?.message}</p>
           </div>
 
           {/* Password */}
           <div className="mb-3">
-            <label htmlFor="pass" className="form-label">Password</label>
-            <input type="password" className="form-control" id="pass" {...register("pass", {
+            <label htmlFor="password" className="form-label">Password</label>
+            <input type="password" className="form-control" id="password" {...register("password", {
               required: {
                 value: true,
                 message: "Password is required"
+              },
+              minLength: {
+                value: 6,
+                message: "Minimum length is 6 characters"
+              },
+              maxLength: {
+                value: 30,
+                message: "Maximum length is 30 characters"
               }
             })} />
             <p className='fs-6 text-danger'>{errors.pass?.message}</p>
           </div>
-
+          
+          {/* Submit Button and Errors alert */}
+          {Object.keys(errors).length > 0 && (
+            <div className="alert alert-danger mt-3" role="alert">
+                There is invalid data. Please correct the errors and try again.
+            </div>
+          )}
           <button className="btn btn-primary">Signup</button>
         </form>
       </div>
